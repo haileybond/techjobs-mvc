@@ -23,5 +23,43 @@ public class SearchController {
     }
 
     // TODO #1 - Create handler to process search request and display results
+    //display to /results
+    @RequestMapping(value = "results")
+    // Use @RequestParam to get searchTerm + searchType from form results
+    public String search(Model model, @RequestParam String searchTerm, @RequestParam String searchType) {
 
+        // initialize empty error
+        String error = "";
+
+        // initialize empty jobList
+        ArrayList<HashMap<String, String>> jobList;
+
+        // if searchTerm == All
+        if (searchType.equals("all")) {
+
+            // search all of jobdata
+            jobList = JobData.findByValue(searchTerm);
+
+        // else, the user chose a searchType
+        } else {
+
+            //search by searchTerm and searchType
+            jobList = JobData.findByColumnAndValue(searchType, searchTerm);
+        }
+
+        // if jobList is empty, pass an error message
+        if (jobList.isEmpty()) {
+
+                // add error message
+                error = "There are no jobs that meet your search terms. Please try again.";
+            }
+
+        // need to pass search results and the ListController as is passed above, and error!
+        model.addAttribute("columns", ListController.columnChoices);
+        model.addAttribute( "error", error);
+        model.addAttribute("jobList", jobList);
+
+        //return "/search"
+        return "search";
+    }
 }
