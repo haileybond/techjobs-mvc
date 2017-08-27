@@ -41,8 +41,15 @@
     -->
     <table th:fragment="results" class="job-listing" th:each="job : ${jobList}">
         <tr th:each="item : ${job}">
+
             <td th:text="${#strings.capitalizeWords(item.key)}"></td>
-            <td th:text="${item.value}"></td>
+            <td >
+                <a 
+                   th:text="${item.value}"
+                   th:href="@{/search/results(searchType='all', searchTerm=${item.value})}">
+                </a>
+            </td>
+
         </tr>
     </table>
 
